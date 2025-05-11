@@ -79,8 +79,8 @@ function SecondPage() {
         setFeedback('Try again!');
       }
     } else {
-      const hasPuSound = uniquePatterns.some(sound => sound.toLowerCase() === 'pu');
-      if (hasPuSound) {
+      const hasOSound = uniquePatterns.some(sound => sound.toLowerCase() === 'o');
+      if (hasOSound) {
         successRef.current = true;
         setFeedback('Good job!');
         // Stop recording if we detect 'pu'
