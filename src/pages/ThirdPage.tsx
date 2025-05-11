@@ -5,26 +5,14 @@ import bunnyImage from '../assets/bunny.png';
 import goodJobSound from '../assets/good-job.mp3';
 import tryAgainSound from '../assets/try-again.mp3';
 import thumbsUpBunnyImage from '../assets/bunny-good.png';
-import jumpingBunnyImage  from '../assets/bunny-running.png';
-
+import jumpingBunnyImage from '../assets/bunny-running.png';
 import '../App.css';
 
-// Define types for the Web Speech API
-declare global {
-  interface Window {
-    webkitSpeechRecognition: any;
-    SpeechRecognition: any;
-  }
-}
-
-function SecondPage() {
+function ThirdPage() {
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedText, setRecordedText] = useState('');
   const [detectedSounds, setDetectedSounds] = useState<string[]>([]);
   const [showSuccessBunny, setShowSuccessBunny] = useState(false);
-  const [isJumping, setIsJumping] = useState(false);
-  const [jumpCount, setJumpCount] = useState(0);
   const successRef = useRef(false);
   const recognitionRef = useRef<any>(null);
   const goodJobAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -46,36 +34,9 @@ function SecondPage() {
     'k': /^k[aeiou]|kuh/i,
   };
 
-  // Effect to handle jumping animation sequence
-  useEffect(() => {
-    if (showSuccessBunny && !isJumping) {
-      // Start jumping after a short delay
-      setTimeout(() => {
-        setIsJumping(true);
-      }, 1000);
-    }
-  }, [showSuccessBunny]);
-
-  // Effect to handle jump count and navigation
-  useEffect(() => {
-    if (isJumping) {
-      if (jumpCount < 4) {
-        // Schedule next jump - faster animation (500ms instead of 800ms)
-        setTimeout(() => {
-          setJumpCount(prev => prev + 1);
-        }, 250); // Time for each jump
-      } else {
-        // Navigate to third page after last jump
-        setTimeout(() => {
-          navigate('/third');
-        }, 300);
-      }
-    }
-  }, [isJumping, jumpCount, navigate]);
-
   useEffect(() => {
     // Add class when component mounts
-    document.body.classList.add('second-page-body');
+    document.body.classList.add('third-page-body');
     
     // Initialize audio elements
     goodJobAudioRef.current = new Audio(goodJobSound);
@@ -83,7 +44,7 @@ function SecondPage() {
     
     // Remove class when component unmounts
     return () => {
-      document.body.classList.remove('second-page-body');
+      document.body.classList.remove('third-page-body');
     };
   }, []);
 
@@ -94,8 +55,6 @@ function SecondPage() {
     } else {
       tryAgainAudioRef.current?.play();
       setShowSuccessBunny(false);
-      setIsJumping(false);
-      setJumpCount(0);
     }
   };
 
@@ -131,11 +90,11 @@ function SecondPage() {
         playFeedbackSound(false);
       }
     } else {
-      const hasOSound = uniquePatterns.some(sound => sound.toLowerCase() === 'o');
-      if (hasOSound) {
+      const hasUSound = uniquePatterns.some(sound => sound.toLowerCase() === 'u');
+      if (hasUSound) {
         successRef.current = true;
         playFeedbackSound(true);
-        // Stop recording if we detect 'o'
+        // Stop recording if we detect 'u'
         if (recognitionRef.current) {
           recognitionRef.current.stop();
         }
@@ -160,7 +119,6 @@ function SecondPage() {
 
       recognition.onstart = () => {
         setIsRecording(true);
-        setRecordedText('');
         setDetectedSounds([]);
         setShowSuccessBunny(false);
       };
@@ -169,7 +127,6 @@ function SecondPage() {
         const results = Array.from(event.results);
         const latestResult = results[results.length - 1];
         const transcript = latestResult[0].transcript;
-        setRecordedText(transcript);
         
         const sounds = analyzeSpeech(transcript);
         setDetectedSounds(sounds);
@@ -181,7 +138,7 @@ function SecondPage() {
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsRecording(false);
-        if (!successRef.current) {  // Check success ref instead of feedback
+        if (!successRef.current) {
           playFeedbackSound(false);
         }
       };
@@ -197,7 +154,7 @@ function SecondPage() {
       // Start recognition
       recognition.start();
 
-      // Stop after 3 seconds only if we haven't detected 'o'
+      // Stop after 3 seconds only if we haven't detected 'u'
       setTimeout(() => {
         if (recognitionRef.current && !successRef.current) {
           recognitionRef.current.stop();
@@ -211,35 +168,8 @@ function SecondPage() {
     }
   };
 
-  // Calculate bunny position based on jump count
-  const getBunnyPosition = () => {
-    if (!isJumping) return {};
-    
-    const horizontalProgress = (jumpCount / 4) * 50; // Horizontal progress (0-100%)
-    const verticalProgress = (jumpCount / 4) * -70; // Vertical progress (moves up by 30%)
-    
-    return {
-      transform: `translate(${horizontalProgress}%, ${verticalProgress}%)`,
-      animation: 'hop 0.5s ease-in-out infinite'
-    };
-  };
-
-  // Get current bunny image based on state
-  const getCurrentBunnyImage = () => {
-    if (isJumping) return jumpingBunnyImage;
-    if (showSuccessBunny) return thumbsUpBunnyImage;
-    return bunnyImage;
-  };
-
-  // Get bunny class names
-  const getBunnyClassNames = () => {
-    const classNames = ['bunny-image'];
-    if (isJumping) classNames.push('hopping');
-    return classNames.join(' ');
-  };
-
   return (
-    <div className="second-page">
+    <div className="third-page">
       <button 
         className="back-button"
         onClick={() => navigate('/')}
@@ -255,15 +185,14 @@ function SecondPage() {
       </div>
       <div className="bunny-container">
         <img 
-          src={getCurrentBunnyImage()} 
-          alt="Bunny" 
-          className={getBunnyClassNames()}
-          style={getBunnyPosition()}
+          src={showSuccessBunny ? thumbsUpBunnyImage : bunnyImage} 
+          alt={showSuccessBunny ? "Happy bunny" : "Cute bunny"} 
+          className="bunny-image" 
         />
       </div>
-      <h1>Oo</h1>
+      <h1>Uu</h1>
     </div>
   );
 }
 
-export default SecondPage; 
+export default ThirdPage; 

@@ -293,12 +293,25 @@ h2 {
 }
 
 @keyframes hop {
-  0%, 100% {
-    transform: translateY(0) rotate(-2deg);
+  0% {
+    transform: translateY(0);
   }
-  50% {
-    transform: translateY(-15px) rotate(2deg);
+  20% {
+    transform: rotate(-10deg) translate(1em, -2em);
   }
+  40% {
+    transform: rotate(10deg) translate(3em, -4em);
+  }
+  60%, 75% {
+    transform: rotate(0) translate(4em, 0);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.bunny-image.hopping {
+  animation: hop 0.5s ease-in-out infinite;
 }
 
 .speech-bubble {
