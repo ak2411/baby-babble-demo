@@ -194,7 +194,7 @@ function SecondPage() {
       <div className="bunny-container">
         <img src={bunnyImage} alt="Cute bunny" className="bunny-image" />
       </div>
-      <h1>Pp</h1>
+      <h1>Oo</h1>
     </div>
   );
 }
