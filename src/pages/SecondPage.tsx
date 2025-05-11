@@ -4,6 +4,9 @@ import coinImage from '../assets/coin.png';
 import bunnyImage from '../assets/bunny.png';
 import goodJobSound from '../assets/good-job.mp3';
 import tryAgainSound from '../assets/try-again.mp3';
+import thumbsUpBunnyImage from '../assets/bunny-good.png';
+import jumpingBunnyImage  from '../assets/bunny-running.png';
+
 import '../App.css';
 
 // Define types for the Web Speech API
@@ -19,6 +22,7 @@ function SecondPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedText, setRecordedText] = useState('');
   const [detectedSounds, setDetectedSounds] = useState<string[]>([]);
+  const [showSuccessBunny, setShowSuccessBunny] = useState(false);
   const successRef = useRef(false);
   const recognitionRef = useRef<any>(null);
   const goodJobAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -57,8 +61,10 @@ function SecondPage() {
   const playFeedbackSound = (success: boolean) => {
     if (success) {
       goodJobAudioRef.current?.play();
+      setShowSuccessBunny(true);
     } else {
       tryAgainAudioRef.current?.play();
+      setShowSuccessBunny(false);
     }
   };
 
@@ -125,6 +131,7 @@ function SecondPage() {
         setIsRecording(true);
         setRecordedText('');
         setDetectedSounds([]);
+        setShowSuccessBunny(false);
       };
 
       recognition.onresult = (event: any) => {
@@ -135,6 +142,9 @@ function SecondPage() {
         
         const sounds = analyzeSpeech(transcript);
         setDetectedSounds(sounds);
+
+        // Single line console log
+        console.log(`Speech Recognition - Text: "${transcript}", Detected Sounds: [${sounds.join(', ')}]`);
       };
 
       recognition.onerror = (event: any) => {
@@ -185,23 +195,12 @@ function SecondPage() {
           className={`floating-coin ${isRecording ? 'recording' : ''}`} 
         />
       </div>
-      {(recordedText || detectedSounds.length > 0) && (
-        <div className="speech-bubble">
-          <p className="detected-text">{recordedText}</p>
-          {detectedSounds.length > 0 && (
-            <div className="detected-sounds">
-              <p>Sounds heard:</p>
-              <div className="sound-badges">
-                {detectedSounds.map((sound, index) => (
-                  <span key={index} className="sound-badge">{sound}</span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
       <div className="bunny-container">
-        <img src={bunnyImage} alt="Cute bunny" className="bunny-image" />
+        <img 
+          src={showSuccessBunny ? thumbsUpBunnyImage : bunnyImage} 
+          alt={showSuccessBunny ? "Happy bunny" : "Cute bunny"} 
+          className="bunny-image" 
+        />
       </div>
       <h1>Oo</h1>
     </div>
