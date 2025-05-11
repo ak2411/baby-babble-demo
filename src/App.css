@@ -1,0 +1,288 @@
+:root {
+  --primary-color: #FF9EAA;
+  --secondary-color: #A6E4D9;
+  --accent-color: #FFD23F;
+  --background-color: #FFF5F6;
+  --text-color: #6B4F4F;
+}
+
+body {
+  background-color: var(--background-color);
+  font-family: 'Quicksand', sans-serif;
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body.second-page-body {
+  background: url('./assets/game-background.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+
+body.home-page-body {
+  background: url('./assets/welcome.png') no-repeat center center fixed;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+}
+
+#root {
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: transform 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em var(--accent-color));
+  transform: scale(1.1) rotate(5deg);
+}
+
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em var(--secondary-color));
+  transform: scale(1.1) rotate(-5deg);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  margin: 2em auto;
+  max-width: 600px;
+}
+
+.read-the-docs {
+  color: var(--text-color);
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.green-button {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 15px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1.2em;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin: 1rem auto;
+  letter-spacing: 0.3px;
+}
+
+.green-button:hover {
+  background-color: var(--primary-color);
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+h1 {
+  color: var(--primary-color);
+  font-size: 3em;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+h2 {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 2em;
+  margin-bottom: 1.5rem;
+}
+
+.second-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.second-page h1 {
+  color: #FF7B7B;  /* Light red color */
+  /* Create outline effect using multiple text-shadows */
+  text-shadow: 
+    -2px -2px 0 #000,  
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
+  font-size: 15em;
+  position: absolute;
+  bottom: 5%;
+  right: 10%;
+}
+
+.second-page p {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 1rem;
+  border-radius: 15px;
+  margin: 2rem auto;
+  max-width: 80%;
+}
+
+/* Add a fun bounce animation for buttons */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.green-button:active {
+  animation: bounce 0.3s ease;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.coin-container {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.floating-coin {
+  width: 400px;
+  animation: float 2s ease-in-out infinite;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+}
+
+.home-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.home-page .card {
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(5px);
+}
+
+.go-button {
+  background-color: var(--accent-color);
+  color: black;
+  border: 8px solid black;
+  padding: 30px 60px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 3em;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 700;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  text-shadow: 2px 2px 4px rgba(255,255,255,0.3);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.go-button:hover {
+  background-color: var(--primary-color);
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  border-color: #333;
+}
+
+.go-button:active {
+  transform: translate(-50%, -50%) scale(0.95);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+}
+
+.go-button {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.go-button:hover {
+  animation: none;
+}
+
+.bunny-container {
+  position: fixed;
+  bottom: 5%;
+  left: 20%;
+  z-index: 2;
+}
+
+.bunny-image {
+  width: 40%;
+  height: auto;
+  filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+}
+
+@keyframes hop {
+  0%, 100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+}
