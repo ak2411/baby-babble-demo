@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import coinImage from '../assets/coin.png';
 import bunnyImage from '../assets/bunny.png';
+import goodJobSound from '../assets/good-job.mp3';
+import tryAgainSound from '../assets/try-again.mp3';
 import '../App.css';
 
 // Define types for the Web Speech API
@@ -17,9 +19,10 @@ function SecondPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordedText, setRecordedText] = useState('');
   const [detectedSounds, setDetectedSounds] = useState<string[]>([]);
-  const [feedback, setFeedback] = useState<string>('');
+  const successRef = useRef(false);
   const recognitionRef = useRef<any>(null);
-  const successRef = useRef(false);  // Add a ref to track success state
+  const goodJobAudioRef = useRef<HTMLAudioElement | null>(null);
+  const tryAgainAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Basic sound patterns for early speech
   const basicSounds = {
@@ -41,11 +44,23 @@ function SecondPage() {
     // Add class when component mounts
     document.body.classList.add('second-page-body');
     
+    // Initialize audio elements
+    goodJobAudioRef.current = new Audio(goodJobSound);
+    tryAgainAudioRef.current = new Audio(tryAgainSound);
+    
     // Remove class when component unmounts
     return () => {
       document.body.classList.remove('second-page-body');
     };
   }, []);
+
+  const playFeedbackSound = (success: boolean) => {
+    if (success) {
+      goodJobAudioRef.current?.play();
+    } else {
+      tryAgainAudioRef.current?.play();
+    }
+  };
 
   const analyzeSpeech = (text: string) => {
     const lowerText = text.toLowerCase().trim();
@@ -73,22 +88,22 @@ function SecondPage() {
 
     const uniquePatterns = [...new Set(detectedPatterns)];
     
-    // Set feedback based on detected sounds
+    // Play feedback sound based on detected sounds
     if (uniquePatterns.length === 0) {
       if (!successRef.current) {
-        setFeedback('Try again!');
+        playFeedbackSound(false);
       }
     } else {
       const hasOSound = uniquePatterns.some(sound => sound.toLowerCase() === 'o');
       if (hasOSound) {
         successRef.current = true;
-        setFeedback('Good job!');
-        // Stop recording if we detect 'pu'
+        playFeedbackSound(true);
+        // Stop recording if we detect 'o'
         if (recognitionRef.current) {
           recognitionRef.current.stop();
         }
       } else if (!successRef.current) {
-        setFeedback('Try again!');
+        playFeedbackSound(false);
       }
     }
     
@@ -110,7 +125,6 @@ function SecondPage() {
         setIsRecording(true);
         setRecordedText('');
         setDetectedSounds([]);
-        setFeedback('');
       };
 
       recognition.onresult = (event: any) => {
@@ -127,7 +141,7 @@ function SecondPage() {
         console.error('Speech recognition error:', event.error);
         setIsRecording(false);
         if (!successRef.current) {  // Check success ref instead of feedback
-          setFeedback('Try again!');
+          playFeedbackSound(false);
         }
       };
 
@@ -135,14 +149,14 @@ function SecondPage() {
         setIsRecording(false);
         // Only show try again if no sounds were detected and we haven't had success
         if (detectedSounds.length === 0 && !successRef.current) {
-          setFeedback('Try again!');
+          playFeedbackSound(false);
         }
       };
 
       // Start recognition
       recognition.start();
 
-      // Stop after 3 seconds only if we haven't detected 'pu'
+      // Stop after 3 seconds only if we haven't detected 'o'
       setTimeout(() => {
         if (recognitionRef.current && !successRef.current) {
           recognitionRef.current.stop();
@@ -171,7 +185,7 @@ function SecondPage() {
           className={`floating-coin ${isRecording ? 'recording' : ''}`} 
         />
       </div>
-      {(recordedText || detectedSounds.length > 0 || feedback) && (
+      {(recordedText || detectedSounds.length > 0) && (
         <div className="speech-bubble">
           <p className="detected-text">{recordedText}</p>
           {detectedSounds.length > 0 && (
@@ -182,11 +196,6 @@ function SecondPage() {
                   <span key={index} className="sound-badge">{sound}</span>
                 ))}
               </div>
-            </div>
-          )}
-          {feedback && (
-            <div className={`feedback ${feedback === 'Good job!' ? 'success' : 'try-again'}`}>
-              {feedback}
             </div>
           )}
         </div>
