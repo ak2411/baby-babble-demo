@@ -6,6 +6,8 @@ import goodJobSound from '../assets/good-job.mp3';
 import tryAgainSound from '../assets/try-again.mp3';
 import thumbsUpBunnyImage from '../assets/bunny-good.png';
 import jumpingBunnyImage  from '../assets/bunny-running.png';
+import sayOSound from '../assets/say-o.mp3';
+import tokenReceivedSound from '../assets/token-received.mp3';
 
 import '../App.css';
 
@@ -29,6 +31,8 @@ function SecondPage() {
   const recognitionRef = useRef<any>(null);
   const goodJobAudioRef = useRef<HTMLAudioElement | null>(null);
   const tryAgainAudioRef = useRef<HTMLAudioElement | null>(null);
+  const sayOAudioRef = useRef<HTMLAudioElement | null>(null);
+  const tokenReceivedAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Basic sound patterns for early speech
   const basicSounds = {
@@ -67,7 +71,7 @@ function SecondPage() {
       } else {
         // Navigate to third page after last jump
         setTimeout(() => {
-          navigate('/third');
+          navigate('/third-page');
         }, 300);
       }
     }
@@ -79,11 +83,24 @@ function SecondPage() {
     
     // Initialize audio elements
     goodJobAudioRef.current = new Audio(goodJobSound);
+    sayOAudioRef.current = new Audio(sayOSound);
     tryAgainAudioRef.current = new Audio(tryAgainSound);
+    tokenReceivedAudioRef.current = new Audio(tokenReceivedSound);
     
+    // Play say-o sound and start recording after it finishes
+    sayOAudioRef.current?.addEventListener('ended', () => {
+      startRecording();
+    });
+    
+    sayOAudioRef.current?.play();
+
     // Remove class when component unmounts
     return () => {
       document.body.classList.remove('second-page-body');
+      // Clean up event listener
+      sayOAudioRef.current?.removeEventListener('ended', () => {
+        startRecording();
+      });
     };
   }, []);
 
@@ -181,17 +198,17 @@ function SecondPage() {
       recognition.onerror = (event: any) => {
         console.error('Speech recognition error:', event.error);
         setIsRecording(false);
-        if (!successRef.current) {  // Check success ref instead of feedback
-          playFeedbackSound(false);
-        }
       };
 
       recognition.onend = () => {
         setIsRecording(false);
-        // Only show try again if no sounds were detected and we haven't had success
-        if (detectedSounds.length === 0 && !successRef.current) {
-          playFeedbackSound(false);
-        }
+        // Add a small delay before checking results
+        setTimeout(() => {
+          // Only show try again if no sounds were detected and we haven't had success
+          if (!successRef.current) {
+            playFeedbackSound(false);
+          }
+        }, 100); // Small delay to ensure state updates have processed
       };
 
       // Start recognition

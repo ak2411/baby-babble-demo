@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/second-page" element={<SecondPage />} />
-        <Route path="/third" element={<ThirdPage />} />
+        <Route path="/third-page" element={<ThirdPage />} />
       </Routes>
     </Router>
   </React.StrictMode>,
