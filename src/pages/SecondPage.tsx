@@ -69,10 +69,12 @@ function SecondPage() {
           setJumpCount(prev => prev + 1);
         }, 250); // Time for each jump
       } else {
-        // Navigate to third page after last jump
+        // Play token received sound and then navigate
+        tokenReceivedAudioRef.current?.play();
+        // Navigate to third page after last jump and sound
         setTimeout(() => {
           navigate('/third-page');
-        }, 300);
+        }, 800); // Increased delay to allow sound to play
       }
     }
   }, [isJumping, jumpCount, navigate]);
