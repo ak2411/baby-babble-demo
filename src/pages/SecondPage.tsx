@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import coinImage from '../assets/coin.png';
@@ -22,8 +23,8 @@ declare global {
 function SecondPage() {
   const navigate = useNavigate();
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedText, setRecordedText] = useState('');
-  const [detectedSounds, setDetectedSounds] = useState<string[]>([]);
+  // const [recordedText, setRecordedText] = useState('');
+  // const [detectedSounds, setDetectedSounds] = useState<string[]>([]);
   const [showSuccessBunny, setShowSuccessBunny] = useState(false);
   const [isJumping, setIsJumping] = useState(false);
   const [jumpCount, setJumpCount] = useState(0);
@@ -180,19 +181,20 @@ function SecondPage() {
 
       recognition.onstart = () => {
         setIsRecording(true);
-        setRecordedText('');
-        setDetectedSounds([]);
+        // setRecordedText('');
+        // setDetectedSounds([]);
         setShowSuccessBunny(false);
       };
 
       recognition.onresult = (event: any) => {
         const results = Array.from(event.results);
         const latestResult = results[results.length - 1];
+        // @ts-expect-error should be any
         const transcript = latestResult[0].transcript;
-        setRecordedText(transcript);
+        // setRecordedText(transcript);
         
         const sounds = analyzeSpeech(transcript);
-        setDetectedSounds(sounds);
+        // setDetectedSounds(sounds);
 
         // Single line console log
         console.log(`Speech Recognition - Text: "${transcript}", Detected Sounds: [${sounds.join(', ')}]`);
