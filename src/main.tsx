@@ -8,7 +8,7 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Router>
+    <Router basename="/baby-babble-demo">
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/second-page" element={<SecondPage />} />
