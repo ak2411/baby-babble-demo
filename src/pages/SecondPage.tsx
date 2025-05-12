@@ -27,6 +27,7 @@ function SecondPage() {
   const [showSuccessBunny, setShowSuccessBunny] = useState(false);
   const [isJumping, setIsJumping] = useState(false);
   const [jumpCount, setJumpCount] = useState(0);
+  const [isCoinMoving, setIsCoinMoving] = useState(false);
   const successRef = useRef(false);
   const recognitionRef = useRef<any>(null);
   const goodJobAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -53,10 +54,10 @@ function SecondPage() {
   // Effect to handle jumping animation sequence
   useEffect(() => {
     if (showSuccessBunny && !isJumping) {
-      // Start jumping after a short delay
-      setTimeout(() => {
-        setIsJumping(true);
-      }, 1000);
+      // Start jumping immediately
+      setIsJumping(true);
+      // Start coin movement when jumping starts
+      setIsCoinMoving(true);
     }
   }, [showSuccessBunny]);
 
@@ -264,7 +265,7 @@ function SecondPage() {
         <img 
           src={coinImage}
           alt="Click to record" 
-          className={`floating-coin ${isRecording ? 'recording' : ''}`} 
+          className={`floating-coin ${isRecording ? 'recording' : ''} ${isCoinMoving ? 'moving-to-rabbit' : ''}`} 
         />
       </div>
       <div className="bunny-container">
