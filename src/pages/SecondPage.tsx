@@ -204,13 +204,6 @@ function SecondPage() {
 
       recognition.onend = () => {
         setIsRecording(false);
-        // Add a small delay before checking results
-        setTimeout(() => {
-          // Only show try again if no sounds were detected and we haven't had success
-          if (!successRef.current) {
-            playFeedbackSound(false);
-          }
-        }, 100); // Small delay to ensure state updates have processed
       };
 
       // Start recognition
@@ -220,6 +213,8 @@ function SecondPage() {
       setTimeout(() => {
         if (recognitionRef.current && !successRef.current) {
           recognitionRef.current.stop();
+          // Play try again sound only after the timeout
+          playFeedbackSound(false);
         }
       }, 3000);
 
